@@ -1,0 +1,10 @@
+############################################################
+# Dockerfile to build app container image
+# Based on docker.dos.softlab.ru/rshb/efr/communication-systems/oracle/weblogic:12.2.1.3-0.0.1-ext
+############################################################
+
+# Use base image
+FROM docker.dos.softlab.ru/rshb/efr/communication-systems/oracle/weblogic:12.2.1.3-0.0.1-ext
+
+# Deploy app
+ADD ./target/*.war /u01/oracle/

@@ -1,0 +1,75 @@
+version: '2.1'
+services:
+
+  # active-mq МС ЕФР
+  efr-mq:
+    image: docker.dos.softlab.ru/rshb/efr/communication-systems/library/active-mq:0.0.1
+    ports:
+      - "8161:8161"
+      - "61616:61616"
+
+  # приложение auth-service-db
+  auth-service-db:
+    build:
+      context: ./auth-service-app
+      dockerfile: Dockerfile-db
+    image: docker.dos.softlab.ru/smedservice/auth-service/${BUILD_MODE:-dev}/auth-service-db:${BUILD_IMAGE_TAG}
+    ports:
+      - "5430:5432"
+
+  # приложение auth-service-app
+  auth-service-app:
+    build:
+      context: ./auth-service-app
+      dockerfile: Dockerfile-app.${BUILD_MODE:-dev}
+    image: docker.dos.softlab.ru/smedservice/auth-service/${BUILD_MODE:-dev}/auth-service-app:${BUILD_IMAGE_TAG}
+    ports:
+      - "8080:7001"
+      - "8450:8453"
+    links:
+      - efr-mq
+      - auth-service-db:service-db
+    volumes:
+       - /share/.:/tmp/share
+
+  # приложение some-service-db
+  some-service-db:
+    build:
+      context: ./test-apps/some-service
+      dockerfile: Dockerfile-db
+    image: docker.dos.softlab.ru/smedservice/auth-service/${BUILD_MODE:-dev}/some-service-db:${BUILD_IMAGE_TAG}
+    ports:
+      - "5431:5432"
+
+  # приложение some-service-app
+  some-service-app:
+    build:
+      context: ./test-apps/some-service
+      dockerfile: Dockerfile-app.${BUILD_MODE:-dev}
+    image: docker.dos.softlab.ru/smedservice/${BUILD_MODE:-dev}/some-service-app:${BUILD_IMAGE_TAG}
+    ports:
+      - "8081:7001"
+      - "8451:8453"
+    links:
+      - efr-mq
+      - some-service-db:service-db
+
+  # приложение api-gateway-app
+  api-gateway-app:
+    image: docker.dos.softlab.ru/smedservice/api-gateway/api-gateway-app:${PR_IMAGE_TAG}
+    ports:
+      - "8082:8080"
+      - "9992:9990"
+      - "8782:8787"
+    links:
+      - efr-mq
+
+  web-presentation-app:
+    image: docker.dos.softlab.ru/smedservice/auth-service-presentation/auth-service-presentation:${PR_IMAGE_TAG}
+    env_file:
+      - .env
+#      - .env.local
+    ports:
+      - "8888:80"
+    links:
+      - api-gateway-app

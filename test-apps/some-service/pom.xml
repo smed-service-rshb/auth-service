@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>ru.softlab.efr.authentication</groupId>
+        <artifactId>smedservice-authentication-test-apps</artifactId>
+        <version>1.0.6-SNAPSHOT</version>
+    </parent>
+
+    <artifactId>smedservice-testapps-some-service</artifactId>
+    <packaging>war</packaging>
+
+    <dependencies>
+
+        <dependency>
+            <groupId>ru.softlab.efr.authentication</groupId>
+            <artifactId>smedservice-auth-service-support</artifactId>
+            <version>1.0.6-SNAPSHOT</version>
+        </dependency>
+
+        <dependency>
+            <groupId>ru.softlab.efr.infrastructure</groupId>
+            <artifactId>transport-support</artifactId>
+            <version>${efr.transport.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>javax.jms</groupId>
+            <artifactId>javax.jms-api</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>javax.servlet-api</artifactId>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.activemq</groupId>
+            <artifactId>activemq-spring</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>ru.softlab.efr.infrastructure</groupId>
+            <artifactId>transport-test</artifactId>
+            <version>${efr.transport.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>ru.softlab.efr.authentication</groupId>
+            <artifactId>smedservice-auth-service-test</artifactId>
+            <version>1.0.6-SNAPSHOT</version>
+            <scope>test</scope>
+        </dependency>
+
+        <!-- ***************************************************** -->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+</project>

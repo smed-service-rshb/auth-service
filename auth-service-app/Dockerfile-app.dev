@@ -1,0 +1,10 @@
+############################################################
+# Dockerfile to build app container image
+# Based on docker.dos.softlab.ru/rshb/efr/communication-systems/ibm/wsl:0.0.1-ext
+############################################################
+
+# Use base image
+FROM docker.dos.softlab.ru/rshb/efr/communication-systems/ibm/wsl:0.0.1-ext
+
+# Deploy app
+ADD ./target/*.war /config/dropins/

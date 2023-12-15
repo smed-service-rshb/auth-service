@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ehcache>
+    <cacheManagerEventListenerFactory class="" properties=""/>
+
+    <cacheManagerPeerProviderFactory
+            class="net.sf.ehcache.distribution.RMICacheManagerPeerProviderFactory"
+            properties="peerDiscovery=automatic,
+                  multicastGroupAddress=230.123.32.1,
+                  multicastGroupPort=49495, timeToLive=1"
+            propertySeparator=","
+    />
+
+    <cacheManagerPeerListenerFactory
+            class="net.sf.ehcache.distribution.RMICacheManagerPeerListenerFactory"
+            properties="socketTimeoutMillis=30000"
+            propertySeparator=","
+    />
+
+    <defaultCache
+            maxElementsInMemory="10000"
+            eternal="false"
+            timeToIdleSeconds="3600"
+            timeToLiveSeconds="3600"
+            memoryStoreEvictionPolicy="LRU">
+        <cacheEventListenerFactory class="net.sf.ehcache.distribution.RMICacheReplicatorFactory"
+                                   properties="replicateAsynchronously=true,
+                  replicatePuts=false,
+                  replicateUpdates=true,
+                  replicateRemovals=true,
+                  replicatePutsViaCopy=false,
+                  replicateUpdatesViaCopy=false,
+                  asynchronousReplicationIntervalMillis=200"
+                                   propertySeparator=","
+        />
+    </defaultCache>
+
+    <cache
+            name="org.hibernate.cache.internal.StandardQueryCache"
+            maxEntriesLocalHeap="10000"
+            eternal="false"
+            timeToIdleSeconds="3600"
+    />
+
+    <cache
+            name="org.hibernate.cache.spi.UpdateTimestampsCache"
+            maxEntriesLocalHeap="5000"
+            eternal="true"
+    />
+
+    <cache
+            name="getOrgUnitList"
+            maxEntriesLocalHeap="10000"
+            eternal="false"
+            timeToIdleSeconds="900"
+            timeToLiveSeconds="900">
+        <cacheEventListenerFactory class="net.sf.ehcache.distribution.RMICacheReplicatorFactory"
+                                   properties="replicateAsynchronously=true,
+                  replicatePuts=false,
+                  replicateUpdates=true,
+                  replicateRemovals=true,
+                  replicatePutsViaCopy=false,
+                  replicatePutsViaCopy=false,
+                  replicateUpdatesViaCopy=false,
+                  asynchronousReplicationIntervalMillis=200"
+                                   propertySeparator=","
+        />
+    </cache>
+</ehcache>

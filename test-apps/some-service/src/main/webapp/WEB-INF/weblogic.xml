@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<weblogic-web-app xmlns="http://xmlns.oracle.com/weblogic/weblogic-web-app">
+    <context-root>some-service</context-root>
+    <container-descriptor>
+        <prefer-application-packages>
+            <package-name>com.fasterxml.classmate.*</package-name>
+            <package-name>com.fasterxml.jackson.*</package-name>
+            <package-name>org.aopalliance.aop.*</package-name>
+            <package-name>org.aopalliance.intercept.*</package-name>
+            <package-name>org.jboss.logging.*</package-name>
+        </prefer-application-packages>
+    </container-descriptor>
+</weblogic-web-app>

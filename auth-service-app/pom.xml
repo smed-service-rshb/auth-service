@@ -1,0 +1,308 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>ru.softlab.efr.authentication</groupId>
+        <artifactId>smedservice-auth-service</artifactId>
+        <version>1.0.6-SNAPSHOT</version>
+    </parent>
+
+    <artifactId>smedservice-auth-service-app</artifactId>
+    <packaging>war</packaging>
+
+    <properties>
+        <h2.version>1.4.193</h2.version>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>ru.softlab.efr.authentication</groupId>
+            <artifactId>smedservice-auth-service-support</artifactId>
+            <version>1.0.6-SNAPSHOT</version>
+        </dependency>
+
+        <dependency>
+            <groupId>ru.softlab.efr.authentication</groupId>
+            <artifactId>smedservice-auth-service-model</artifactId>
+            <version>1.0.6-SNAPSHOT</version>
+        </dependency>
+
+        <dependency>
+            <groupId>ru.softlab.efr.common</groupId>
+            <artifactId>utilities</artifactId>
+            <version>${efr.utilities.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>ru.softlab.efr.settings</groupId>
+            <artifactId>common-settings-support</artifactId>
+            <version>${efr.settings.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>ru.softlab.efr.infrastructure</groupId>
+            <artifactId>transport-support</artifactId>
+            <version>${efr.transport.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>ru.softlab.efr.infrastructure</groupId>
+            <artifactId>logging-support</artifactId>
+            <version>${efr.logging.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>javax.jms</groupId>
+            <artifactId>javax.jms-api</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>javax.servlet-api</artifactId>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>com.fasterxml</groupId>
+            <artifactId>classmate</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.activemq</groupId>
+            <artifactId>activemq-spring</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.ldap</groupId>
+            <artifactId>spring-ldap-core</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>ru.softlab.efr.infrastructure</groupId>
+            <artifactId>transport-test</artifactId>
+            <version>${efr.transport.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>ru.softlab.efr.authentication</groupId>
+            <artifactId>smedservice-auth-service-client</artifactId>
+            <version>1.0.6-SNAPSHOT</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>ru.softlab.efr.authentication</groupId>
+            <artifactId>smedservice-auth-service-test</artifactId>
+            <version>1.0.6-SNAPSHOT</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-core</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>javax.el</groupId>
+            <artifactId>javax.el-api</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.glassfish</groupId>
+            <artifactId>javax.el</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.json</groupId>
+            <artifactId>json</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>fluent-hc</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>commons-beanutils</groupId>
+            <artifactId>commons-beanutils</artifactId>
+            <version>1.6</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.jayway.jsonpath</groupId>
+            <artifactId>json-path-assert</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+            <version>${h2.version}</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.poi</groupId>
+            <artifactId>poi</artifactId>
+            <version>3.15</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.poi</groupId>
+            <artifactId>poi-ooxml</artifactId>
+            <version>3.15</version>
+        </dependency>
+
+        <dependency>
+            <groupId>ru.softlab.efr.common</groupId>
+            <artifactId>smedservice-common-dict-client</artifactId>
+            <version>${efr.common.dict.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>ru.softlab.efr.authentication</groupId>
+                    <artifactId>smedservice-auth-service-client</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>ru.softlab.efr.authentication</groupId>
+                    <artifactId>smedservice-auth-service-support</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-deploy-plugin</artifactId>
+                <configuration>
+                    <skip>true</skip>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>io.fabric8</groupId>
+                <artifactId>docker-maven-plugin</artifactId>
+                <configuration>
+                    <skip>false</skip>
+                    <images>
+                        <!--TODO удалить сборку образа после перевода всех МС на Weblogic-->
+                        <image>
+                            <name>docker.dos.softlab.ru/smedservice/auth-service/auth-service-app</name>
+                            <alias>auth-service-app</alias>
+                            <build>
+                                <nocache>true</nocache>
+                                <tags>
+                                    <tag>pr</tag>
+                                </tags>
+                                <dockerFileDir>${project.basedir}</dockerFileDir>
+                                <dockerFile>Dockerfile-app.dev</dockerFile>
+                            </build>
+                        </image>
+                        <image>
+                            <name>docker.dos.softlab.ru/smedservice/auth-service/dev/auth-service-app</name>
+                            <alias>auth-service-app</alias>
+                            <build>
+                                <nocache>true</nocache>
+                                <tags>
+                                    <tag>pr</tag>
+                                </tags>
+                                <dockerFileDir>${project.basedir}</dockerFileDir>
+                                <dockerFile>Dockerfile-app.dev</dockerFile>
+                            </build>
+                        </image>
+                        <image>
+                            <name>docker.dos.softlab.ru/smedservice/auth-service/test/auth-service-app</name>
+                            <alias>auth-service-app</alias>
+                            <build>
+                                <nocache>true</nocache>
+                                <tags>
+                                    <tag>pr</tag>
+                                </tags>
+                                <dockerFileDir>${project.basedir}</dockerFileDir>
+                                <dockerFile>Dockerfile-app.test</dockerFile>
+                            </build>
+                        </image>
+                        <image>
+                            <name>docker.dos.softlab.ru/smedservice/auth-service/auth-service-db</name>
+                            <alias>auth-service-db</alias>
+                            <build>
+                                <nocache>true</nocache>
+                                <tags>
+                                    <tag>pr</tag>
+                                </tags>
+                                <dockerFileDir>${project.basedir}</dockerFileDir>
+                                <dockerFile>Dockerfile-db</dockerFile>
+                            </build>
+                        </image>
+                    </images>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>io.swagger</groupId>
+                <artifactId>swagger-codegen-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>compile</id>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                        <configuration>
+                            <inputSpec>${project.basedir}/../api.yaml</inputSpec>
+                            <language>ru.softlab.efr.common.swagger.generator.backend.ServerCodegen</language>
+                            <modelPackage>ru.softlab.efr.services.auth.exchange.model</modelPackage>
+                            <apiPackage>ru.softlab.efr.services.auth.controllers</apiPackage>
+                            <output>${project.basedir}</output>
+                            <generateSupportingFiles>false</generateSupportingFiles>
+                        </configuration>
+                    </execution>
+                </executions>
+                <dependencies>
+                    <dependency>
+                        <groupId>ru.softlab.efr</groupId>
+                        <artifactId>swagger-backend-generator</artifactId>
+                        <version>${swagger-backend-generator.version}</version>
+                    </dependency>
+                </dependencies>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>${maven-javadoc-plugin.version}</version>
+                <configuration>
+                    <jarOutputDirectory>${artifact.output.directory}</jarOutputDirectory>
+                    <excludePackageNames>*generated</excludePackageNames>
+                    <additionalparam>-Xdoclint:none</additionalparam>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>attach-javadocs</id>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+        </plugins>
+    </build>
+</project>

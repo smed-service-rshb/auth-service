@@ -1,0 +1,4 @@
+set search_path to 'auth_service';
+UPDATE users USR
+SET orgunit = (SELECT OU.ID FROM ORGUNIT OU WHERE OU.NAME = SUBSTRING(CAST(USR.ORGUNIT AS VARCHAR) from 4 for 20))
+WHERE USR.ORGUNIT < 2000000;

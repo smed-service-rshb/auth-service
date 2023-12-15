@@ -1,0 +1,16 @@
+DELETE FROM motivation_program_attachments;
+DELETE FROM motivation_program;
+DELETE FROM rights_to_permission;
+DELETE FROM user_roles;
+DELETE FROM user_locks;
+DELETE FROM user_login_attempt;
+DELETE FROM user_orgunits;
+DELETE FROM user_to_group;
+DELETE FROM employee_group;
+DELETE FROM user_mobile_devices;
+DELETE FROM users;
+DELETE FROM orgunit;
+DELETE FROM segment;
+DELETE FROM roles;
+DELETE FROM settings;
+DELETE FROM sessions;

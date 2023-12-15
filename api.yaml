@@ -1,0 +1,2657 @@
+swagger: '2.0'
+info:
+  title: API микросервиса авторизации
+  version: 1.0.0
+paths:
+  /auth/v1/mobile-login:
+    post:
+      description: Сервис авторизации для мобильных устройств
+      tags:
+        - MobileAuthService
+      operationId: mobileAuthService
+      produces:
+        - application/json
+      x-start-version: 1
+      x-access: NoCheck
+      parameters:
+        - in: body
+          name: body
+          required: true
+          schema:
+            $ref: '#/definitions/MobileLoginRequest'
+      responses:
+        200:
+          description: Ok
+          schema:
+            $ref: '#/definitions/createSessionRs'
+        400:
+          description: Ошибка валидации
+          schema:
+            $ref: '#/definitions/errorData'
+        401:
+          description: Ошибка аутентификации
+        500:
+          description: Internal server error
+
+  /auth/v1/short-code:
+    post:
+      description: Регистрация короткого кода мобильного устройства
+      tags:
+        - MobileAuthService
+      operationId: mobileAuthShortCodeService
+      produces:
+        - application/json
+      x-start-version: 1
+      parameters:
+        - in: body
+          name: body
+          required: true
+          schema:
+            $ref: '#/definitions/ShortCodeRequest'
+      responses:
+        200:
+          description: Ok
+          schema:
+            $ref: '#/definitions/ShortCodeResponse'
+        400:
+          description: Ошибка валидации
+          schema:
+            $ref: '#/definitions/errorData'
+        401:
+          description: Ошибка аутентификации
+        500:
+          description: Internal server error
+
+  /auth/v1/session:
+    post:
+      tags:
+        - Session
+      description: Запрос создания сессии (аутентификация)
+      operationId: authenticate
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: createSessionRq
+          description: Тело запроса создания сессии (аутентификация)
+          required: true
+          schema:
+            $ref: '#/definitions/createSessionRq'
+      responses:
+        200:
+          description: ОК
+          schema:
+            $ref: '#/definitions/createSessionRs'
+        400:
+          description: Ошибка валидации
+          schema:
+            $ref: '#/definitions/errorData'
+        401:
+          description: ошибка аутентификации
+        406:
+          description: ошибка состояния сотрудника
+        500:
+          description: Internal server error
+        502:
+          description: недоступен active directory
+        504:
+          description: таймаут к active directory
+
+  /auth/v1/session/{id}:
+    post:
+      tags:
+        - Session
+      description: Запрос обновления сессии
+      operationId: updateSession
+      parameters:
+        - in: path
+          name: id
+          type: string
+          required: true
+          description: Идентификатор сессии
+        - in: query
+          name: officeName
+          type: string
+          required: true
+          description: Наименование офиса пользователя
+        - in: query
+          name: branchName
+          type: string
+          required: true
+          description: Наименование филиала пользователя
+      responses:
+        200:
+          description: Сессия обновлена
+        404:
+          description: Cессия не существует(или уже закрыта)
+        500:
+          description: Internal server error
+    delete:
+      tags:
+        - Session
+      description: Запрос закрытия сессии
+      operationId: closeSession
+      produces:
+        - application/json
+      parameters:
+        - in: path
+          name: id
+          type: string
+          required: true
+          description: Идентификатор сессии
+      responses:
+        200:
+          description: Сессия закрыта
+        404:
+          description: Cессия не существует(или уже закрыта)
+        500:
+          description: Internal server error
+
+  /auth/v1/rights:
+    get:
+      tags:
+        - Rights
+      description: Запрос списка прав
+      operationId: getAllRights
+      produces:
+        - application/json
+      responses:
+        200:
+          description: ОК
+          schema:
+            $ref: '#/definitions/getAllRightsRs'
+        403:
+          description: Доступ запрещен
+        500:
+          description: Internal server error
+
+  /auth/v1/roles:
+    post:
+      tags:
+        - Roles
+      description: Запрос создания роли
+      operationId: addRole
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: roleData
+          description: Тело запроса создания сессии (аутентификация)
+          required: true
+          schema:
+            $ref: '#/definitions/createRoleRq'
+      responses:
+        200:
+          description: ОК
+          schema:
+            $ref: '#/definitions/entityIdRs'
+        400:
+          description: Ошибка валидации
+          schema:
+            $ref: '#/definitions/errorData'
+        403:
+          description: Нет прав
+        409:
+          description: Роль уже существует и т.п
+        500:
+          description: Internal server error
+
+    get:
+      tags:
+        - Roles
+      description: Запрос получения списка ролей
+      operationId: getRoles
+      produces:
+        - application/json
+      responses:
+        200:
+          description: ОК
+          schema:
+            $ref: '#/definitions/getRolesRs'
+        403:
+          description: Доступ запрещен
+        500:
+          description: Internal server error
+
+  /auth/v1/private/roles:
+    get:
+      tags:
+        - Roles
+      description: Запрос получения списка ролей (private api)
+      operationId: getRolesWithOutPermissions
+      produces:
+        - application/json
+      responses:
+        200:
+          description: ОК
+          schema:
+            $ref: '#/definitions/getRolesRs'
+        403:
+          description: Доступ запрещен
+        500:
+          description: Internal server error
+
+  /auth/v1/changeLogin:
+    post:
+      tags:
+        - Employees
+      description: Запрос на изменение логина пользователя
+      operationId: changeLogin
+      consumes:
+        - application/json
+      parameters:
+        - in: body
+          name: body
+          description: Данные для изменения логина пользователя
+          required: true
+          schema:
+            $ref: '#/definitions/changeLoginData'
+      responses:
+        200:
+          description: ОК
+        403:
+          description: Доступ запрещен
+        500:
+          description: Internal server error
+
+  /auth/v1/roles/{id}:
+    get:
+      tags:
+        - Roles
+      description: Запрос получения данных роли
+      operationId: getRole
+      produces:
+        - application/json
+      parameters:
+        - in: path
+          name: id
+          type: integer
+          format: int64
+          required: true
+          description: Идентификатор роли
+      responses:
+        200:
+          description: ОК
+          schema:
+            $ref: '#/definitions/getRoleRs'
+        403:
+          description: Доступ запрещен
+        404:
+          description: Роль не найдена
+        500:
+          description: Internal server error
+    delete:
+      tags:
+        - Roles
+      description: Запрос удаления роли
+      operationId: deleteRole
+      produces:
+        - application/json
+      parameters:
+        - in: path
+          name: id
+          type: integer
+          format: int64
+          required: true
+          description: Идентификатор роли
+      responses:
+        200:
+          description: Роль удалена
+        403:
+          description: Доступ запрещен
+        404:
+          description: Cессия не существует(или уже закрыта)
+        500:
+          description: Internal server error
+    put:
+      tags:
+        - Roles
+      description: Запрос обновления роли
+      operationId: updateRole
+      produces:
+        - application/json
+      parameters:
+        - in: path
+          name: id
+          type: integer
+          format: int64
+          required: true
+          description: Идентификатор роли
+        - in: body
+          name: roleData
+          description: Тело запроса обновления роли
+          required: true
+          schema:
+            $ref: '#/definitions/createRoleRq'
+      responses:
+        200:
+          description: ОК
+        400:
+          description: Ошибка валидации
+          schema:
+            $ref: '#/definitions/errorData'
+        403:
+          description: Доступ запрещен
+        404:
+          description: Роль не найдена
+        409:
+          description: Роль уже существует и т.п
+        500:
+          description: Internal server error
+  /auth/v1/private/setNewPassword/{userId}:
+    post:
+      tags:
+        - Employees
+      description: Запрос на установку пользователю пароля
+      operationId: setPasswordWithOutPermission
+      consumes:
+        - application/json
+      parameters:
+        - in: path
+          name: userId
+          description: Идентификатор пользователя
+          required: true
+          type: integer
+          format: int64
+        - in: body
+          name: setPasswordRq
+          description: Данные для изменения пароля
+          required: true
+          schema:
+            $ref: '#/definitions/setPasswordData'
+      responses:
+        200:
+          description: OK
+        400:
+          description: Ошибка валидации
+          schema:
+            $ref: '#/definitions/errorData'
+        404:
+          description: Not Found
+        500:
+          description: Internal server error
+
+  /auth/v1/private/changeLogin:
+    post:
+      tags:
+        - Employees
+      description: Запрос на изменение логина пользователя
+      operationId: changeLoginWithOutPermission
+      consumes:
+        - application/json
+      parameters:
+        - in: body
+          name: body
+          description: Данные для изменения логина пользователя
+          required: true
+          schema:
+            $ref: '#/definitions/privateChangeLoginData'
+      responses:
+        200:
+          description: ОК
+        403:
+          description: Доступ запрещен
+        500:
+          description: Internal server error
+
+  /auth/v1/employees:
+    put:
+      tags:
+        - Employees
+      description: Получение списка учетных записей всех сотрудников. Список отсортирован по ФИО сотрудников.
+      operationId: getEmployees
+      x-spring-pageable: true
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: filterData
+          description: Тело запроса с данными фильтрации
+          required: false
+          schema:
+            $ref: '#/definitions/filterEmployeesRq'
+        - in: query
+          type: boolean
+          name: hasFilter
+          description: Признак фильтрации сотрудников
+          required: false
+      responses:
+        200:
+          description: ОК
+          schema:
+            $ref: '#/definitions/employeeDataForList'
+        403:
+          description: Доступ запрещен
+        500:
+          description: Internal server error
+    post:
+      tags:
+        - Employees
+      description: Создание сотрудника
+      operationId: createEmployee
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: createEmployeeRq
+          description: данные сотрудника
+          required: true
+          schema:
+            $ref: '#/definitions/createOrUpdateEmployeeRq'
+      responses:
+        200:
+          description: ОК
+          schema:
+            $ref: '#/definitions/createEmployeeRs'
+        400:
+          description: Ошибка валидации
+          schema:
+            $ref: '#/definitions/errorData'
+        403:
+          description: Доступ запрещен
+        500:
+          description: Internal server error
+
+  /auth/v1/private/employees:
+    get:
+      tags:
+        - Employees
+      description: Получение списка пользователей системы (private api)
+      operationId: getEmployeesWithOutPermissions
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: filterData
+          description: Тело запроса с данными фильтрации
+          required: false
+          schema:
+            $ref: '#/definitions/filterEmployeesRq'
+      responses:
+        200:
+          description: OK
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/employeeDataForList'
+        500:
+          description: Internal server error
+
+  /auth/v1/private/employees/all:
+    get:
+      tags:
+        - Employees
+      description: Получение списка пользователей системы (private api)
+      operationId: getEmployeesWithOutPermissionsWithDeleted
+      produces:
+        - application/json
+      responses:
+        200:
+          description: OK
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/employeeDataForList'
+        500:
+          description: Internal server error
+
+  /auth/v1/private/employee:
+    get:
+      tags:
+        - Employees
+      description: Получить пользователя системы по логину (private api)
+      operationId: getEmployeeByLoginWithOutPermissions
+      produces:
+        - application/json
+      parameters:
+        - in: query
+          name: login
+          type: string
+          required: true
+          description: Логин пользователя
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: '#/definitions/employeeDataForList'
+        404:
+          description: Not Found
+        500:
+          description: Internal server error
+
+    post:
+      tags:
+        - Employees
+      description: Создание сотрудника (private api)
+      operationId: createEmployeeWithOutPermissions
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: createEmployeeRq
+          description: данные сотрудника
+          required: true
+          schema:
+            $ref: '#/definitions/createOrUpdateEmployeeRq'
+      responses:
+        200:
+          description: ОК
+          schema:
+            $ref: '#/definitions/createEmployeeRs'
+        400:
+          description: Ошибка валидации
+          schema:
+            $ref: '#/definitions/errorData'
+        403:
+          description: Доступ запрещен
+        500:
+          description: Internal server error
+
+  /auth/v1/employees/{id}:
+    get:
+      tags:
+        - Employees
+      description: Запрос получения информации о сотруднике
+      operationId: getEmployeeById
+      produces:
+        - application/json
+      parameters:
+        - in: path
+          name: id
+          type: integer
+          format: int64
+          required: true
+          description: Идентификатор сотрудника
+      responses:
+        200:
+          description: ОК
+          schema:
+            $ref: '#/definitions/getEmployeeRs'
+        403:
+          description: Доступ запрещен
+        500:
+          description: Internal server error
+    put:
+      tags:
+        - Employees
+      description: Запрос обновления данных сотрудника
+      operationId: updateEmployee
+      produces:
+        - application/json
+      parameters:
+        - in: path
+          name: id
+          type: integer
+          format: int64
+          required: true
+          description: Идентификатор сотрудника
+        - in: body
+          name: updateEmployeeRq
+          description: Тело запроса обновления данных пользователя
+          required: true
+          schema:
+            $ref: '#/definitions/createOrUpdateEmployeeRq'
+      responses:
+        200:
+          description: ОК
+        400:
+          description: Ошибка валидации
+          schema:
+            $ref: '#/definitions/errorData'
+        403:
+          description: Доступ запрещен
+        404:
+          description: Сотрудник не найден
+        500:
+          description: Internal server error
+    delete:
+      tags:
+        - Employees
+      description: Запрос удаления сотрудника
+      operationId: deleteEmployee
+      produces:
+        - application/json
+      parameters:
+        - in: path
+          name: id
+          type: integer
+          format: int64
+          required: true
+          description: Идентификатор сотрудника
+      responses:
+        200:
+          description: Сотрудник удален
+        404:
+          description: Сотрудник не существует
+        500:
+          description: Internal server error
+
+  /auth/v1/private/employees/{id}:
+    get:
+      tags:
+      - Employees
+      description: Запрос получения информации о сотруднике
+      operationId: getEmployeeByIdWithOutPermission
+      produces:
+      - application/json
+      parameters:
+      - in: path
+        name: id
+        type: integer
+        format: int64
+        required: true
+        description: Идентификатор сотрудника
+      responses:
+        200:
+          description: ОК
+          schema:
+            $ref: '#/definitions/emploeeDataWithOrgUnits'
+        400:
+          description: Not Found
+        500:
+          description: Internal server error
+    put:
+      tags:
+        - Employees
+      description: Запрос обновления данных сотрудника (private api)
+      operationId: updateEmployeeWithOutPermissions
+      produces:
+        - application/json
+      parameters:
+        - in: path
+          name: id
+          type: integer
+          format: int64
+          required: true
+          description: Идентификатор сотрудника
+        - in: body
+          name: updateEmployeeRq
+          description: Тело запроса обновления данных пользователя
+          required: true
+          schema:
+            $ref: '#/definitions/createOrUpdateEmployeeRq'
+      responses:
+        200:
+          description: ОК
+        400:
+          description: Ошибка валидации
+          schema:
+            $ref: '#/definitions/errorData'
+        403:
+          description: Доступ запрещен
+        404:
+          description: Сотрудник не найден
+        500:
+          description: Internal server error
+
+  /auth/v1/private/user/{id}/update:
+    post:
+      tags:
+        - Employees
+      description: Запрос обновления основных полей пользователя (private api)
+      operationId: updateUserWithOutPermissions
+      consumes:
+        - application/json
+      parameters:
+        - in: path
+          name: id
+          type: integer
+          format: int64
+          required: true
+          description: Идентификатор пользователя
+        - in: body
+          name: updateUserRq
+          description: Тело запроса обновления данных пользователя
+          required: true
+          schema:
+            $ref: '#/definitions/updateUserRq'
+      responses:
+        200:
+          description: ОК
+        400:
+          description: Ошибка валидации
+          schema:
+            $ref: '#/definitions/errorData'
+        403:
+          description: Доступ запрещен
+        404:
+          description: Сотрудник не найден
+        500:
+          description: Internal server error
+
+  /auth/v1/employees/{id}/lock:
+    post:
+      tags:
+        - Employees
+      description: Запрос блокировки пользователя
+      operationId: lockEmployee
+      produces:
+        - application/json
+      parameters:
+        - in: path
+          name: id
+          type: integer
+          format: int64
+          required: true
+          description: Идентификатор сотрудника
+        - in: body
+          name: lockEmployeeRq
+          description: Тело запроса блокировки пользователя
+          required: false
+          schema:
+            $ref: '#/definitions/lockEmployeeRq'
+      responses:
+        200:
+          description: ОК
+        400:
+          description: Ошибка валидации
+          schema:
+            $ref: '#/definitions/errorData'
+        403:
+          description: Доступ запрещен
+        404:
+          description: Сотрудник не найден
+        500:
+          description: Internal server error
+
+  /auth/v1/employees/{id}/unlock:
+    post:
+      tags:
+        - Employees
+      description: Запрос разблокировки пользователя
+      operationId: unlockEmployee
+      produces:
+        - application/json
+      parameters:
+        - in: path
+          name: id
+          type: integer
+          format: int64
+          required: true
+          description: Идентификатор сотрудника
+      responses:
+        200:
+          description: ОК
+        400:
+          description: Ошибка валидации
+          schema:
+            $ref: '#/definitions/errorData'
+        403:
+          description: Доступ запрещен
+        404:
+          description: Сотрудник не найден
+        500:
+          description: Internal server error
+
+
+  /auth/v1/employees/import/sync:
+    get:
+      tags:
+        - Employees
+      description: Синхронизация списка учетных записей сотрудников с файлом
+      operationId: syncEmployeeList
+      produces:
+        - application/json
+      responses:
+        200:
+          description: ОК
+          schema:
+            $ref: '#/definitions/updateListStatus'
+        403:
+          description: Доступ запрещен
+        500:
+          description: Internal server error
+
+  /auth/v1/employees/import/sync/status:
+    get:
+      tags:
+        - Employees
+      description: Получить статус синхронизация списка учетных записей сотрудников с файлом
+      operationId: statusSyncEmployeeList
+      produces:
+        - application/json
+      responses:
+        200:
+          description: ОК
+          schema:
+            $ref: '#/definitions/updateListStatus'
+        403:
+          description: Доступ запрещен
+        500:
+          description: Internal server error
+
+  /auth/v1/changePassword:
+    post:
+      tags:
+        - Employees
+      description: Запрос на изменение пароля пользователя
+      operationId: changePassword
+      consumes:
+        - application/json
+      parameters:
+        - in: body
+          name: changePasswordRequest
+          description: Данные для изменения пароля пользователя
+          required: true
+          schema:
+            $ref: '#/definitions/changePasswordData'
+      responses:
+        200:
+          description: ОК
+        403:
+          description: Доступ запрещен
+        500:
+          description: Internal server error
+
+  /auth/v1/private/changePassword:
+    post:
+      tags:
+        - Employees
+      description: Запрос на изменение пароля пользователя
+      operationId: changePasswordPrivate
+      consumes:
+        - application/json
+      parameters:
+        - in: body
+          name: changePasswordRequest
+          description: Данные для изменения пароля пользователя
+          required: true
+          schema:
+            $ref: '#/definitions/changePasswordData'
+      responses:
+        200:
+          description: ОК
+          schema:
+            $ref: '#/definitions/changePasswordRs'
+        403:
+          description: Доступ запрещен
+        500:
+          description: Internal server error
+
+  /auth/v1/resetPassword/{id}:
+    get:
+      tags:
+        - Employees
+      description: Запрос на сброс пароля пользователя
+      operationId: resetPassword
+      parameters:
+        - in: path
+          name: id
+          type: integer
+          format: int64
+          required: true
+          description: Идентификатор сотрудника.
+
+      responses:
+        200:
+          description: ОК
+        403:
+          description: Доступ запрещен
+        500:
+          description: Internal server error
+
+  /auth/v1/private/client/resetPassword/{id}:
+    get:
+      tags:
+        - Employees
+      description: Установка технического пароля для клиента
+      operationId: resetClientPasswordWithOutPermission
+      parameters:
+        - in: path
+          name: id
+          type: integer
+          format: int64
+          required: true
+          description: Идентификатор клиента.
+        - in: query
+          name: password
+          type: string
+          required: true
+          description: Технический пароль
+      responses:
+        200:
+          description: ОК
+        404:
+          description: Not found
+        500:
+          description: Internal server error
+
+  /auth/v1/orgunits/children/{id}:
+    get:
+      tags:
+        - OrgUnit
+      description: Получить список дочерних организационных структур.
+      operationId: listChildOrgUnit
+      produces:
+        - application/json
+      parameters:
+        - in: path
+          name: id
+          type: integer
+          format: int64
+          required: true
+          description: Идентификатор ОШС
+      responses:
+        200:
+          description: ОК
+          schema:
+            description: Список организационных структур
+            $ref: '#/definitions/orgUnitsData'
+        403:
+          description: Forbidden
+        500:
+          description: Internal server error
+
+  /auth/v1/orgunit/{id}:
+    get:
+      tags:
+        - OrgUnit
+      description: Получить полные данные по структурному подразделению.
+      operationId: getOrgUnit
+      produces:
+        - application/json
+      parameters:
+        - in: path
+          name: id
+          type: integer
+          format: int64
+          required: true
+          description: Идентификатор ОШС
+      responses:
+        200:
+          description: ОК
+          schema:
+            description: Данные ОШС
+            $ref: '#/definitions/officeData'
+        403:
+          description: Forbidden
+        500:
+          description: Internal server error
+
+  /auth/v1/orgunits/type/{orgUnitType}:
+    get:
+      tags:
+        - OrgUnit
+      description: Получить список организационных структур указанного типа.
+      operationId: listOrgUnitByType
+      produces:
+        - application/json
+      parameters:
+        - in: path
+          name: orgUnitType
+          type: integer
+          format: int64
+          required: true
+          description: Тип ОШС, допустимые значения 0(РФ), 1(ВСП)
+      responses:
+        200:
+          description: ОК
+          schema:
+            description: Список организационных структур
+            $ref: '#/definitions/orgUnitsData'
+        403:
+          description: Forbidden
+        500:
+          description: Internal server error
+
+  /auth/v1/orgunits:
+    get:
+      tags:
+        - OrgUnit
+      description: Получить полный список организационных структур.
+      operationId: listFullOrgUnits
+      produces:
+        - application/json
+      responses:
+        200:
+          description: ОК
+          schema:
+            description: Список организацонных структур
+            $ref: '#/definitions/orgUnitsDataFull'
+        403:
+          description: Forbidden
+        500:
+          description: Internal server error
+
+  /auth/v1/segments:
+    get:
+      tags:
+        - Segments
+      description: Запрос получения списка сегментов
+      operationId: getSegments
+      produces:
+        - application/json
+      responses:
+        200:
+          description: ОК
+          schema:
+            $ref: '#/definitions/getSegmentsRs'
+        403:
+          description: Доступ запрещен
+        500:
+          description: Internal server error
+
+  /auth/v1/settings/password:
+    get:
+      tags:
+        - PasswordCheckSettings
+      description: Запрос получения настроек требований к сложности паролей
+      operationId: getPasswordCheckSettings
+      produces:
+        - application/json
+      responses:
+        200:
+          description: ОК
+          schema:
+            $ref: '#/definitions/passwordCheckSettings'
+        403:
+          description: Доступ запрещен
+        500:
+          description: Internal server error
+    put:
+      tags:
+        - PasswordCheckSettings
+      description: Запрос обновления настроек требований к сложности паролей
+      operationId: updatePasswordCheckSettings
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: updatePasswordCheckSettingsRq
+          description: Тело запроса обновления настроек требований к сложности паролей
+          required: true
+          schema:
+            $ref: '#/definitions/passwordCheckSettings'
+      responses:
+        200:
+          description: ОК
+        400:
+          description: Ошибка валидации
+          schema:
+            $ref: '#/definitions/errorData'
+        403:
+          description: Доступ запрещен
+        500:
+          description: Internal server error
+
+  /auth/v1/private/groups:
+    get:
+      tags:
+        - EmployeeGroup
+      description: Получить список элементов справочника групп пользователей без учета прав
+      operationId: getEmployeeGroupListWithOutPermissions
+      produces:
+        - application/json
+      responses:
+        200:
+          description: ОК
+          schema:
+            $ref: '#/definitions/employeeGroupRs'
+        403:
+          description: Forbidden
+        500:
+          description: Internal server error
+
+  /auth/v1/groups:
+    get:
+      tags:
+        - EmployeeGroup
+      description: Запрос получения списка записей справочника групп пользователей с пегинацией
+      operationId: getEmployeeGroupList
+      x-spring-pageable: true
+      produces:
+        - application/json
+      responses:
+        200:
+          description: ОК
+          schema:
+            description: Постраничный вывод групп пользователей
+            $ref: '#/definitions/groupData'
+        403:
+          description: Forbidden
+        500:
+          description: Internal server error
+    post:
+      tags:
+        - EmployeeGroup
+      description: Создание записи в справочнике групп пользователей
+      operationId: createGroup
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: groupData
+          description: Данные записи справочника групп пользователя
+          schema:
+            $ref: '#/definitions/groupData'
+      responses:
+        200:
+          description: ОК
+          schema:
+            $ref: '#/definitions/groupData'
+        400:
+          description: Ошибка валидации
+          schema:
+            $ref: '#/definitions/errorData'
+        403:
+          description: Доступ запрещен
+        500:
+          description: Internal server error
+
+  /auth/v1/groups/{id}:
+    get:
+      tags:
+        - EmployeeGroup
+      description: Получение информации о группе пользователей
+      operationId: getGroupDataById
+      produces:
+        - application/json
+      parameters:
+        - in: path
+          name: id
+          description: Идентификатор группу пользователей
+          required: true
+          type: integer
+          format: int64
+      responses:
+        200:
+          description: ОК
+          schema:
+            description: Информация о группе пользователей
+            $ref: '#/definitions/groupData'
+        403:
+          description: Доступ запрещен
+        500:
+          description: Internal server error
+    put:
+      tags:
+        - EmployeeGroup
+      description: Обновление информации о группе пользователей
+      operationId: updateGroupById
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: path
+          name: id
+          description: Идентификатор группы пользователей
+          required: true
+          type: integer
+          format: int64
+        - in: body
+          name: groupData
+          description: Новые данные о группе пользователей
+          schema:
+            $ref: '#/definitions/groupData'
+      responses:
+        200:
+          description: ОК
+        400:
+          description: Ошибка валидации
+          schema:
+            $ref: '#/definitions/errorData'
+        403:
+          description: Доступ запрещен
+        500:
+          description: Internal server error
+
+  /auth/v1/settings/motivation-config:
+    get:
+      tags:
+        - MotivationCheckSettings
+      description: Запрос получения настроек программы мотивации
+      operationId: getMotivationCheckSettings
+      produces:
+        - application/json
+      responses:
+        200:
+          description: ОК
+          schema:
+            $ref: '#/definitions/motivationSettings'
+        403:
+          description: Доступ запрещен
+        500:
+          description: Internal server error
+    post:
+      tags:
+        - MotivationCheckSettings
+      description: Запрос обновления настроек программы мотивации
+      operationId: updateMotivationCheckSettings
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: updateMotivationSettingsRq
+          description: Тело запроса обновления настроек программы мотивации
+          required: true
+          schema:
+            $ref: '#/definitions/motivationSettings'
+      responses:
+        200:
+          description: ОК
+        400:
+          description: Ошибка валидации
+          schema:
+            $ref: '#/definitions/errorData'
+        403:
+          description: Доступ запрещен
+        500:
+          description: Internal server error
+
+  /auth/v1/motivation/hide-window:
+    get:
+      tags:
+        - Motivation
+      description: Запрос признака необходимости отображения окна мотивации
+      operationId: getMotivationWindowHide
+      produces:
+        - application/json
+      responses:
+        200:
+          description: ОК
+          schema:
+            type: boolean
+            description: >
+              признак необходимости отображения окна мотивации:
+                true: скрывать окно
+                false: отобразить окно
+        404:
+          description: Not Found
+        423:
+          description: Функциональность отключена
+        500:
+          description: Internal server error
+
+  /auth/v1/motivation:
+    get:
+      tags:
+        - Motivation
+      description: Запрос программы мотивации для текущего пользователя
+      operationId: getMotivation
+      produces:
+        - application/json
+      responses:
+        200:
+          description: ОК
+          schema:
+            $ref: '#/definitions/motivationProgramUser'
+        404:
+          description: Not Found
+        423:
+          description: Функциональность отключена
+        500:
+          description: Internal server error
+    post:
+      tags:
+        - Motivation
+      description: Запрос на создание или редактирование программы мотивации для текущего пользователя
+      operationId: postMotivation
+      parameters:
+        - in: body
+          name: motivationProgramUserModify
+          description: Запрос на создания или редактирование программы мотивации для текущего пользователя
+          required: true
+          schema:
+            $ref: '#/definitions/motivationProgramUserModify'
+      produces:
+        - application/json
+      consumes:
+        - application/json
+      responses:
+        200:
+          description: ОК
+          schema:
+            $ref: '#/definitions/motivationProgramUser'
+        400:
+          description: Bad request
+          schema:
+            $ref: '#/definitions/errorModel'
+        404:
+          description: Not Found
+        406:
+          description: Невозможно внести изменения в мотивацию в проверенном статусе
+        423:
+          description: Функциональность отключена
+        500:
+          description: Internal server error
+
+  /auth/v1/motivation/print:
+    get:
+      tags:
+        - Motivation
+      description: Получить данные печатной формы для мотивации.
+      operationId: printMotivation
+      produces:
+        - application/vnd.openxmlformats-officedocument.wordprocessingml.document
+      responses:
+        200:
+          description: OK
+          schema:
+            type: string
+            format: byte
+        403:
+          description: Forbidden
+        404:
+          description: Not Found
+        423:
+          description: Функциональность отключена
+        500:
+          description: Internal server error
+
+  /auth/v1/motivation/{motivationDocumentTypes}/attach-document:
+    post:
+      tags:
+        - Motivation
+      description: Прикрепить файл к мотивации.
+      operationId: uploadMotivationAttachment
+      parameters:
+        - in: formData
+          name: content
+          type: file
+          description: Прикрепляемый файл
+        - in: path
+          name: motivationDocumentTypes
+          type: string
+          description: >
+            Типы документов мотивации:
+              PASSPORT - Паспорт
+              CHECK_FORM - Форма, подтвержденная подписью
+          required: true
+      responses:
+        200:
+          description: ОК
+          schema:
+            type: string
+        400:
+          description: Bad request
+          schema:
+            $ref: '#/definitions/errorModel'
+        403:
+          description: Невозможно прикрепить документ
+        423:
+          description: Функциональность отключена
+        404:
+          description: Not Found
+        500:
+          description: Internal server error
+    get:
+      tags:
+        - Motivation
+      description: Получить файл, прикрепленный к мотивации.
+      operationId: getMotivationAttachment
+      parameters:
+        - in: path
+          name: motivationDocumentTypes
+          type: string
+          description: >
+            Типы документов мотивации:
+              PASSPORT - Паспорт
+              CHECK_FORM - Форма, подтвержденная подписью
+          required: true
+      produces:
+        - application/octet-stream
+      responses:
+        200:
+          description: OK
+          schema:
+            description: Контент файла
+            type: string
+            format: byte
+        400:
+          description: Bad request
+        403:
+          description: Forbidden
+        404:
+          description: Not Found
+        423:
+          description: Функциональность отключена
+        500:
+          description: Internal server error
+
+  /auth/v1/motivation/{motivationId}/edit:
+    post:
+      tags:
+        - Motivation
+      description: Редактирование настроек программы мотивации пользователя
+      operationId: motivationByMotivationIdEdit
+      parameters:
+        - in: path
+          name: motivationId
+          type: integer
+          format: int64
+          required: true
+          description: Идентификатор программы мотивации
+        - in: body
+          name: updateMotivationSettingsRq
+          description: Тело запроса обновления настроек программы мотивации
+          required: true
+          schema:
+            $ref: '#/definitions/motivationSettingsEditAdmin'
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      responses:
+        200:
+          description: ОК
+        400:
+          description: Bad request
+          schema:
+            $ref: '#/definitions/errorModel'
+        403:
+          description: Forbidden
+        404:
+          description: Not Found
+        406:
+          description: Не все необходимые данные присутствуют для перевода в статус корректного
+          schema:
+            $ref: '#/definitions/errorModel'
+        423:
+          description: Функциональность отключена
+        500:
+          description: Internal server error
+
+  /auth/v1/motivation/{motivationId}/get-document/{motivationDocumentTypes}:
+    get:
+      tags:
+        - Motivation
+      description: Получить файл, прикрепленный к мотивации.
+      operationId: getMotivationAttachmentById
+      parameters:
+        - in: path
+          type: integer
+          format: int64
+          required: true
+          name: motivationId
+          description: Идентификатор обращения клиента
+        - in: path
+          name: motivationDocumentTypes
+          type: string
+          description: >
+            Типы документов мотивации:
+             PASSPORT - Паспорт
+             CHECK_FORM - Форма, подтвержденная подписью
+          required: true
+      produces:
+        - application/octet-stream
+      responses:
+        200:
+          description: OK
+          schema:
+            description: Контент файла
+            type: string
+            format: byte
+        400:
+          description: Bad request
+        403:
+          description: Forbidden
+        404:
+          description: Not Found
+        423:
+          description: Функциональность отключена
+        500:
+          description: Internal server error
+
+  /auth/v1/motivation/{userId}/get-latest:
+    get:
+      tags:
+        - Motivation
+      description: Получить активную мотивацию для пользователя
+      operationId: getUserMotivationLatest
+      produces:
+        - application/json
+      parameters:
+        - in: path
+          type: integer
+          format: int64
+          name: userId
+          description: Идентификатор пользователя
+          required: true
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: '#/definitions/motivationProgramAdmin'
+        403:
+          description: Forbidden
+        404:
+          description: Not Found
+        423:
+          description: Функциональность отключена
+        500:
+          description: Internal server error
+
+  /auth/v1/motivation/{userId}/get-hystory-list:
+    get:
+      tags:
+        - Motivation
+      description: Получить список мотиваций для пользователя
+      operationId: getUserMotivationsList
+      produces:
+        - application/json
+      parameters:
+        - in: path
+          type: integer
+          format: int64
+          name: userId
+          description: Идентификатор пользователя
+          required: true
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: '#/definitions/motivationProgramAdminList'
+        403:
+          description: Forbidden
+        404:
+          description: Not Found
+        423:
+          description: Функциональность отключена
+        500:
+          description: Internal server error
+
+  /auth/v1/motivation/report:
+    get:
+      tags:
+        - Motivation
+      description: Вывод отчета программ мотивации.
+      operationId: getXlsxReport
+      produces:
+        - application/vnd.openxmlformats-officedocument.spreadsheetml.sheet
+      parameters:
+        - in: query
+          name: startDate
+          type: string
+          format: date
+          description: Дата начала формирования отчета
+          required: false
+        - in: query
+          name: endDate
+          type: string
+          format: date
+          description: Дата окончания формирования отчета
+          required: false
+      responses:
+        200:
+          description: OK
+          schema:
+            type: string
+            format: byte
+        403:
+          description: Forbidden
+        404:
+          description: Not Found
+        423:
+          description: Функциональность отключена
+        500:
+          description: Internal server error
+
+definitions:
+
+  changePasswordRs:
+    type: object
+    allOf:
+    - $ref: '#/definitions/errorData'
+
+  MobileLoginRequest:
+    type: object
+    description: |
+      Параметры запроса авторизации
+    required:
+      - authMethod
+      - login
+      - password
+    properties:
+      authMethod:
+        type: string
+        enum:
+          - AUTH_METH_NAME_AND_PASSWORD
+          - AUTH_METH_SHORT_CODE
+        description: |
+          Метод авторизации
+      login:
+        type: string
+        description: |
+          Логин или токен
+      password:
+        type: string
+        description: |
+          Пароль или пин
+      identifierDevice:
+        type: string
+        description: |
+          Идентификатор устройства
+      platform:
+        type: string
+        enum:
+          - ANDROID
+          - IOS
+        description: |
+          Платформа
+
+  ShortCodeRequest:
+    type: object
+    description: |
+      Информация о коротком коде
+    required:
+      - shortCode
+      - sessionId
+      - identifierDevice
+      - platform
+    properties:
+      shortCode:
+        type: string
+        description: |
+          Код доступа
+      sessionId:
+        type: string
+        description: |
+          id-сессии
+      identifierDevice:
+        type: string
+        description: |
+          Идентификатор устройства
+      platform:
+        type: string
+        enum:
+          - ANDROID
+          - IOS
+        description: |
+          Платформа
+
+  ShortCodeResponse:
+    type: object
+    description: |
+      Информация об установке короткого кода
+    required:
+      - token
+    properties:
+      token:
+        type: string
+        description: |
+          Токен мобильного устройства на сервере
+
+  privateChangeLoginData:
+    type: object
+    required:
+      - oldLogin
+      - newLogin
+    properties:
+      oldLogin:
+        type: string
+        description: Текущий логин пользователя
+      newLogin:
+        type: string
+        description: Желаемый логин пользователя
+
+  employeeGroupRs:
+    type: object
+    properties:
+      groups:
+        description: Список всех записей справочника групп пользователей
+        type: array
+        items:
+          $ref: '#/definitions/groupData'
+  groupData:
+    type: object
+    properties:
+      id:
+        type: integer
+        format: int64
+        description: Идентификатор записи справочника группы пользователя
+      name:
+        type: string
+        description: Наименование записи справочника группы пользователя
+      code:
+        type: string
+        description: Код группы записи справочника
+
+  errorData:
+    type: object
+    properties:
+      errors:
+        type: array
+        items:
+          type: object
+          properties:
+            fieldName:
+              type: string
+              description: Поле, к которому относится ошибка
+            errorMessage:
+              type: string
+              description: Сообщение об ошибке
+
+  createSessionRq:
+    type: object
+    required:
+      - login
+      - password
+    properties:
+      login:
+        type: string
+        description: логин
+      password:
+        type: string
+        description: пароль
+      officeId:
+        type: integer
+        format: int64
+        description: Идентификатор офиса в который выполняется вход
+
+  createSessionRs:
+    type: object
+    properties:
+      id:
+        type: string
+        description: идентификатор сессии
+      user:
+        type: object
+        properties:
+          id:
+            type: integer
+            format: int64
+            description: Идентификатор учётной записи сотрудника
+          login:
+            type: string
+            description: Логин сотрудника
+          secondName:
+            type: string
+            description: Фамилия сотрудника
+          firstName:
+            type: string
+            description: Имя сотрудника
+          middleName:
+            type: string
+            description: Отчество сотрудника
+          mobilePhone:
+            type: string
+            description: Номер мобильного телефона
+          email:
+            type: string
+            description: Адрес электронной почты
+          position:
+            type: string
+            description: Должность сотрудника
+          office:
+            type: string
+            description: Название ВСП
+          branch:
+            type: string
+            description: Название регионального филиала
+          offices:
+            description: Список филиалов назначенных пользователю
+            type: array
+            items:
+              $ref: '#/definitions/orgUnitData'
+          personnelNumber:
+            type: string
+            description: Табельный номер
+          rights:
+            type: array
+            description: Назначенные права
+            items:
+              type: string
+              description: Имя права
+          changePassword:
+            type: boolean
+            description: Признак необходимости сменить пароль при входе
+          groupCodes:
+            description: Список кодов групп пользователя
+            type: array
+            items:
+              type: string
+
+  createRoleRq:
+    type: object
+    required:
+      - name
+      - desc
+      - rights
+    properties:
+      id:
+        type: integer
+        format: int64
+        description: Идентификатор роли
+      name:
+        type: string
+        description: Название роли
+      desc:
+        type: string
+        description: Краткое описание(для отображения пользователю)
+      rights:
+        type: array
+        description: Назначенные права
+        items:
+          type: string
+
+  rightData:
+    type: object
+    properties:
+      description:
+        type: string
+        description: Описание права
+      externalId:
+        type: string
+        description: Ключ права
+
+  getAllRightsRs:
+    type: object
+    properties:
+      rights:
+        type: array
+        items:
+          $ref: '#/definitions/rightData'
+
+
+  getRoleRs:
+    type: object
+    allOf:
+      - $ref: '#/definitions/roleData'
+
+  getRolesRs:
+    type: object
+    properties:
+      roles:
+        type: array
+        items:
+          $ref: '#/definitions/roleData'
+
+  entityIdRs:
+    type: object
+    properties:
+      id:
+        type: integer
+        format: int64
+        description: Идентификатор возвращаемого объекта, например, роли
+  roleData:
+    type: object
+    properties:
+      id:
+        type: integer
+        format: int64
+        description: Идентификатор роли
+      name:
+        type: string
+        description: Название роли
+      desc:
+        type: string
+        description: Краткое описание(для отображения пользователю)
+      rights:
+        type: array
+        description: Назначенные права
+        items:
+          type: string
+  emploeeDataWithOrgUnits:
+    type: object
+    properties:
+      id:
+        type: integer
+        format: int64
+        description: id
+      login:
+        type: string
+        description: логин
+      firstName:
+        type: string
+        minLength: 1
+        maxLength: 255
+        description: имя
+      secondName:
+        type: string
+        minLength: 1
+        maxLength: 255
+        description: фамилия
+      middleName:
+        type: string
+        minLength: 1
+        maxLength: 255
+        description: отчество
+      mobilePhone:
+        type: string
+        maxLength: 20
+        description: мобильный телефон
+      birthDate:
+        type: string
+        format: date
+        description: Дата рождения
+      innerPhone:
+        type: string
+        maxLength: 20
+        description: внутренний телефон
+      email:
+        type: string
+        maxLength: 150
+        description: адрес электронной почты
+        pattern: (^(((\w+-)|(\w+\.))*\w+@(\w+\.)+[a-zA-Z]{2,6})$)
+      position:
+        type: string
+        maxLength: 50
+        description: должность
+      personnelNumber:
+        type: string
+        description: табельный номер
+      orgUnits:
+        type: array
+        description: Список орг. структур
+        items:
+          $ref: '#/definitions/orgUnitData'
+          description: Объекты орг. структуры
+      segmentId:
+        type: integer
+        format: int64
+        description: Идентификатор сегмента
+      groupIds:
+        description: Список идентификаторов групп пользователя
+        type: array
+        items:
+          type: integer
+          format: int64
+
+  employeeData:
+    type: object
+    required:
+      - firstName
+      - secondName
+      - personnelNumber
+      - orgUnitId
+      - segmentId
+    properties:
+      login:
+        type: string
+        description: логин
+      firstName:
+        type: string
+        minLength: 1
+        maxLength: 255
+        description: имя
+      secondName:
+        type: string
+        minLength: 1
+        maxLength: 255
+        description: фамилия
+      middleName:
+        type: string
+        minLength: 1
+        maxLength: 255
+        description: отчество
+      mobilePhone:
+        type: string
+        maxLength: 20
+        description: мобильный телефон
+      birthDate:
+        type: string
+        format: date
+        description: Дата рождения
+      innerPhone:
+        type: string
+        maxLength: 20
+        description: внутренний телефон
+      email:
+        type: string
+        maxLength: 150
+        description: адрес электронной почты
+        pattern: (^(((\w+-)|(\w+\.))*\w+@(\w+\.)+[a-zA-Z]{2,6})$)
+      position:
+        type: string
+        maxLength: 50
+        description: должность
+      personnelNumber:
+        type: string
+        description: табельный номер
+      orgUnits:
+        type: array
+        description: Список идентификаторов орг. структур
+        items:
+          type: integer
+          format: int64
+          description: Идентификатор объекта орг. структуры
+      segmentId:
+        type: integer
+        format: int64
+        description: Идентификатор сегмента
+      groupIds:
+        description: Список идентификаторов групп пользователя
+        type: array
+        items:
+          type: integer
+          format: int64
+
+  getEmployeeRs:
+    allOf:
+      - $ref: '#/definitions/employeeData'
+      - type: object
+        properties:
+          id:
+            type: integer
+            format: int64
+            description: Идентификатор учётной записи сотрудника
+          changePassword:
+            type: boolean
+            description: Признак необходимости сменить пароль при входе
+          segment:
+            type: string
+            description: Название сегмента
+          roles:
+            type: array
+            description: Назначенные роли
+            items:
+              type: integer
+              format: int64
+              description: Идентификатор роли
+          lockStatus:
+            type: boolean
+            description: Признак, блокировки пользователя в системе
+
+  employeeDataForList:
+    allOf:
+      - $ref: '#/definitions/employeeData'
+      - type: object
+        properties:
+          id:
+            type: integer
+            format: int64
+            description: Идентификатор учётной записи сотрудника
+          fullName:
+            type: string
+            description: ФИО сотрудника
+          branches:
+            type: array
+            description: Список наименований региональных филиалов
+            items:
+              type: string
+              description: Название регионального филиала
+          offices:
+            type: array
+            description: Список наименований офисов
+            items:
+              type: string
+              description: Название офиса
+          segment:
+            type: string
+            description: Название сегмента
+          roles:
+            type: array
+            description: Назначенные роли
+            items:
+              type: string
+              description: Имя роли
+          lockStatus:
+            type: boolean
+            description: Признак, блокировки пользователя в системе
+
+  employeesData:
+    type: object
+    properties:
+      employees:
+        type: array
+        description: Список сотрудников
+        items:
+          $ref: '#/definitions/employeeDataForList'
+
+  filterEmployeesRq:
+    type: object
+    properties:
+      secondName:
+        type: string
+        description: Фамилия сотрудника
+      firstName:
+        type: string
+        description: Имя сотрудника
+      middleName:
+        type: string
+        description: Отчество сотрудника
+      birthDate:
+        type: string
+        format: date
+        description: Дата рождения
+      personnelNumber:
+        type: string
+        description: Табельный номер
+      mobilePhone:
+        type: string
+        description: Номер мобильного телефона
+      branches:
+        description: Название регионального филиала
+        type: array
+        items:
+          type: string
+      orgUnitIdes:
+        description: Название регионального филиала
+        type: array
+        items:
+          type: integer
+          format: int64
+      position:
+        description: Должность сотрудника
+        type: string
+      roleId:
+        description: Роль сотрудника
+        type: integer
+        format: int64
+      motivationCorrectStatus:
+        $ref: '#/definitions/motivationCorrectStatus'
+        description: Статус корректности мотивации
+
+  changePasswordData:
+    type: object
+    required:
+      - login
+      - oldPassword
+      - newPassword
+    properties:
+      login:
+        type: string
+        description: логин
+      oldPassword:
+        type: string
+        description: старый пароль
+      newPassword:
+        type: string
+        description: новый пароль
+
+  updateUserRq:
+    type: object
+    required:
+    - firstName
+    - secondName
+    - middleName
+    - mobilePhone
+    - birthDate
+    - email
+    properties:
+      firstName:
+        type: string
+        minLength: 1
+        maxLength: 255
+        description: имя
+      secondName:
+        type: string
+        minLength: 1
+        maxLength: 255
+        description: фамилия
+      middleName:
+        type: string
+        minLength: 1
+        maxLength: 255
+        description: отчество
+      mobilePhone:
+        type: string
+        maxLength: 20
+        description: мобильный телефон
+      birthDate:
+        type: string
+        format: date
+        description: Дата рождения
+      email:
+        type: string
+        description: Дата рождения
+
+  createOrUpdateEmployeeRq:
+    allOf:
+      - $ref: '#/definitions/employeeData'
+      - type: object
+        description: Данные сотрудника
+        required:
+          - roles
+          - firstName
+          - secondName
+          - personnelNumber
+          - orgUnitId
+          - segmentId
+        properties:
+          password:
+            type: string
+            description: пароль
+          roles:
+            type: array
+            description: Назначенные роли (идентификаторы)
+            items:
+              type: integer
+              format: int64
+
+  createEmployeeRs:
+    type: object
+    properties:
+      id:
+        type: integer
+        format: int64
+        description: Идентификатор пользователя
+
+  orgUnitData:
+    type: object
+    description: Организационная штатная структура
+    properties:
+      id:
+        type: integer
+        format: int64
+        description: Идентификатор записи
+      branch:
+        type: string
+        minLength: 1
+        maxLength: 255
+        description: Название регионального филиала (РФ); заполняется, если type = РФ.
+      office:
+        type: string
+        minLength: 1
+        maxLength: 255
+        description: Номер внутреннего структурного подразделения (ВСП); заполняется, если type = ВСП.
+
+  orgUnitsData:
+    type: object
+    properties:
+      orgUnits:
+        type: array
+        description: Список орг. структур
+        items:
+          $ref: '#/definitions/orgUnitData'
+
+  officeData:
+    type: object
+    description: Офис
+    properties:
+      officeId:
+        type: integer
+        format: int64
+        description: Идентификатор офиса
+      name:
+        type: string
+        minLength: 1
+        maxLength: 255
+        description: Номер внутреннего структурного подразделения (ВСП)
+      city:
+        type: string
+        minLength: 1
+        maxLength: 255
+        description: Город
+      address:
+        type: string
+        description: Адрес структурного подразделения
+
+  orgUnitDataFull:
+    type: object
+    description: Организационная штатная структура
+    properties:
+      branchId:
+        type: integer
+        format: int64
+        description: Идентификатор филиала
+      name:
+        type: string
+        minLength: 1
+        maxLength: 255
+        description: Название регионального филиала (РФ)
+      offices:
+        type: array
+        description: Список офисов
+        items:
+          $ref: '#/definitions/officeData'
+
+  orgUnitsDataFull:
+    type: object
+    properties:
+      orgUnits:
+        type: array
+        description: Список орг. структур
+        items:
+          $ref: '#/definitions/orgUnitDataFull'
+
+  simpleObjectData:
+    type: object
+    properties:
+      id:
+        type: number
+        format: integer
+        description: Идентификатор сущности
+      code:
+        type: string
+        description: Код
+      name:
+        type: string
+        description: Наименование
+
+  getSegmentsRs:
+    type: object
+    properties:
+      segments:
+        type: array
+        items:
+          $ref: '#/definitions/simpleObjectData'
+
+  lockEmployeeRq:
+    type: object
+    properties:
+      description:
+        type: string
+        description: Описание причины блокировки
+
+  updateListStatus:
+    type: object
+    properties:
+      status:
+        type: string
+
+  passwordCheckSettings:
+    type: object
+    required:
+      - checkEnabled
+      - maxLength
+      - minLength
+      - numberOfDifferentCharacters
+      - specialCharsets
+      - enabledCharsets
+    properties:
+      checkEnabled:
+        type: boolean
+        description: Признак, показывающий надо ли выполнять проверку сложности паролей
+      maxLength:
+        type: integer
+        description: Максимальная длина пароля
+      minLength:
+        type: integer
+        description: Минимальная длина пароля
+      numberOfDifferentCharacters:
+        type: integer
+        description: Минимальное количество различных символов в пароле
+      specialCharsets:
+        type: string
+        description: Набор разрешённых специальных символов
+        maxLength: 255
+      enabledCharsets:
+        type: array
+        description: Набор разрешённых множеств символов
+        items:
+          $ref: '#/definitions/passwordCharset'
+      requiredCharsets:
+        type: array
+        description: Набор обязательных множеств символов
+        items:
+          $ref: '#/definitions/passwordCharset'
+
+  passwordCharset:
+    type: string
+    description: |
+      Множество групп символов, использующихся для настройки требований к паролям пользователей.
+        * DIGIT - Цифры
+        * LOWERCASE_LATIN - Латинские прописные буквы
+        * UPPERCASE_LATIN - Латинские заглавные буквы
+        * SPECIAL - Специальные символы
+    enum:
+      - DIGIT
+      - LOWERCASE_LATIN
+      - UPPERCASE_LATIN
+      - SPECIAL
+
+  changeLoginData:
+    type: object
+    required:
+      - login
+    properties:
+      login:
+        type: string
+        description: логин
+
+  setPasswordData:
+    type: object
+    required:
+    - newPassword
+    - expireTime
+    properties:
+      newPassword:
+        type: string
+        description: Пароль
+
+  motivationSettings:
+    type: object
+    required:
+      - isEnabled
+    properties:
+      isEnabled:
+        type: boolean
+        description: Признак, показывающий активен ли модуль или нет
+      expireTime:
+        type: integer
+        description: Срок действия мотиваций в месяцах
+
+  motivationProgramUser:
+    type: object
+    description: Программа мотивации
+    properties:
+      id:
+        type: integer
+        format: int64
+        description: Идентификатор мотивации
+      accountNumber:
+        type: string
+        description: Номер счета банка РСХБ
+      bikCode:
+        type: string
+        description: БИК банка
+      bankName:  
+        type: string
+        description: Наименование филиала банка
+      inn:  
+        type: string
+        description: ИНН
+      registrationAddress:  
+        type: string
+        description: Адрес регистрации, в случае отсутствия ИНН
+      index:  
+        type: string
+        description: Индекс, в случае отсутствия ИНН
+      comment:
+        type: string
+        description: комментарий
+      motivationCorrectStatus:
+        $ref: '#/definitions/motivationCorrectStatus'
+        description: Статус корректности мотивации
+      documentName:
+        type: string
+        description: Имя прикрепленного документа с подтверждением участия
+      passportName:
+        type: string
+        description: Паспорт участника программы мотивации
+      startDate:
+        type: string
+        description: Дата начала действия програмы мотивации в формате ISO-8601 (ГГГГ-ММ-ДД)
+
+  motivationProgramUserModify:
+    type: object
+    description: Модель создания или модификации программы мотивации у пользователя
+    required:
+      - accountNumber
+      - bikCode
+      - bankName
+    properties:
+      accountNumber:
+        type: string
+        description: Номер счета банка РСХБ
+        pattern: (^[0-9]{20})
+      bikCode:
+        type: string
+        description: БИК банка
+        pattern: (^[0-9]{9})
+      bankName:  
+        type: string
+        description: Наименование филиала банка
+        pattern: (^(.{0,250}$))
+      inn:  
+        type: string
+        description: ИНН
+        pattern: (^[0-9]{12})
+      registrationAddress:  
+        type: string
+        description: Адрес регистрации, в случае отсутствия ИНН
+        pattern: (^(.{0,250}$))
+      index:  
+        type: string
+        description: Индекс, в случае отсутствия ИНН
+        pattern: (^[0-9]{6})
+      startDate:
+        type: string
+        format: date
+        description: Дата начала действия програмы мотивации
+
+  motivationProgramAdminList:
+    type: object
+    properties:
+      elements:
+        type: array
+        items:
+          $ref: '#/definitions/motivationProgramAdmin'
+
+  motivationProgramAdmin:
+    type: object
+    description: Программа мотивации
+    properties:
+      id:
+        type: integer
+        format: int64
+        description: Идентификатор мотивации
+      userId:
+        type: integer
+        format: int64
+        description: Идентификатор пользователя
+      accountNumber:
+        type: string
+        description: Номер счета банка РСХБ
+      bikCode:
+        type: string
+        description: БИК банка
+      bankName:  
+        type: string
+        description: Наиминование филиала банка
+      inn:  
+        type: string
+        description: ИНН
+      registrationAddress:  
+        type: string
+        description: Адресс регистрации, в случае отсутствия ИНН 
+      index:  
+        type: string
+        description: Индекс, в случае отсутствия ИНН
+      comment:
+        type: string
+        description: комментарий
+      motivationCorrectStatus:
+        $ref: '#/definitions/motivationCorrectStatus'
+      isActive:
+        type: boolean
+        description: Признак активности
+      documentName:
+        type: string
+        description: Имя прикрепленного документа с плдтверждением участия
+      passportName:
+        type: string
+        description: Паспорт участника программы мотивации
+      startDate:
+        type: string
+        description: Дата начала действия програмы мотивации в формате ISO-8601 (ГГГГ-ММ-ДД)
+      endDate:
+        type: string
+        description: Дата окончания действия програмы мотивации в формате ISO-8601 (ГГГГ-ММ-ДД)
+
+  motivationSettingsEditAdmin:
+    type: object
+    description: Форма редактирования программы мотивации
+    properties:
+      accountNumber:
+        type: string
+        description: Номер счета банка РСХБ
+        pattern: (^[0-9]{20})
+      bikCode:
+        type: string
+        description: БИК банка
+        pattern: (^[0-9]{9})
+      bankName:
+        type: string
+        description: Наименование филиала банка
+        pattern: (^(.{0,250}$))
+      inn:
+        type: string
+        description: ИНН
+        pattern: (^[0-9]{12})
+      registrationAddress:
+        type: string
+        description: Адрес регистрации, в случае отсутствия ИНН
+        pattern: (^(.{0,250}$))
+      index:
+        type: string
+        description: Индекс, в случае отсутствия ИНН
+        pattern: (^[0-9]{6})
+      comment:
+        type: string
+        description: комментарий
+      motivationCorrectStatus:
+        $ref: '#/definitions/motivationCorrectStatus'
+        description: Статус корректности мотивации
+      startDate:
+        type: string
+        format: date
+        description: Дата начала действия програмы мотивации
+
+  motivationCorrectStatus:
+    type: string
+    description: >
+      Статус корректности мотивации:
+        CORRECT - Признак корректности
+        INCORRECT - Признак некорректности
+        NOT_CHECKED - Не проверено
+    enum:
+      - CORRECT
+      - INCORRECT
+      - NOT_CHECKED
+
+  motivationDocumentTypes:
+    type: string
+    description: >
+      Типы документов мотивации:
+        PASSPORT - Паспорт
+        CHECK_FORM - Форма, подтвержденная подписью
+    enum:
+      - PASSPORT
+      - CHECK_FORM
+
+  errorModel:
+    type: object
+    description: Описание ошибки
+    required:
+      - errors
+    properties:
+      errors:
+        type: array
+        items:
+          $ref: '#/definitions/checkModel'
+
+  checkModel:
+    type: object
+    description: Контейнер с результатами одной проверки
+    properties:
+      key:
+        type: string
+        description: Поле или иной объект, подверженный проверке
+      value:
+        type: string
+        description: Результат проверки, описывающий выявленные отклонения от ТЗ
+
+  motivationGetXlsxReport:
+    type: object
+    description: Внутренняя модель элемента отчета для мотивации
+    properties:
+      startDate:
+        type: string
+        format: date
+        description: Дата начала формирования отчета
+      endDate:
+        type: string
+        format: date
+        description: Дата окончания формирования отчета
+
