@@ -15,7 +15,6 @@ import ru.softlab.efr.services.auth.exchange.model.*;
 import ru.softlab.efr.services.auth.model.MotivationEntity;
 import ru.softlab.efr.services.auth.services.MotivationService;
 import ru.softlab.efr.services.auth.services.MotivationSettingsService;
-import ru.softlab.efr.services.auth.services.TemplateService;
 import ru.softlab.efr.services.authorization.annotations.HasRight;
 
 import javax.validation.Valid;
@@ -34,17 +33,14 @@ public class MotivationController implements MotivationApi {
     private MotivationService motivationService;
     private MotivationConverter motivationConverter;
     private MotivationSettingsService motivationSettingsService;
-    private TemplateService templateService;
 
     @Autowired
     public MotivationController(MotivationService motivationService,
                                 MotivationConverter motivationConverter,
-                                MotivationSettingsService motivationSettingsService,
-                                TemplateService templateService) {
+                                MotivationSettingsService motivationSettingsService) {
         this.motivationService = motivationService;
         this.motivationConverter = motivationConverter;
         this.motivationSettingsService = motivationSettingsService;
-        this.templateService = templateService;
     }
 
     @Override
@@ -181,8 +177,8 @@ public class MotivationController implements MotivationApi {
         if (motivationSettingsService.getCurrentSettings().isIsEnabled()) {
             return ResponseEntity.ok()
                     .contentType(MediaType.valueOf("application/vnd.openxmlformats-officedocument.wordprocessingml.document"))
-                    .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + templateService.getMotivationFileName())
-                    .body(templateService.getMotivationPrintForm());
+                    .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=")
+                    .body(new byte[0]);
         } else {
             return ResponseEntity.status(HttpStatus.LOCKED).build();
         }
