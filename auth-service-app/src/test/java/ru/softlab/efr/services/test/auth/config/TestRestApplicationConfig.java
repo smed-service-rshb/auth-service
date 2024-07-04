@@ -1,6 +1,5 @@
 package ru.softlab.efr.services.test.auth.config;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.*;
 import org.springframework.core.task.TaskExecutor;
 import org.springframework.data.web.config.EnableSpringDataWebSupport;
@@ -8,7 +7,6 @@ import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
-import ru.softlab.efr.common.client.PrintTemplatesClient;
 import ru.softlab.efr.common.settings.annotations.EnableSettings;
 import ru.softlab.efr.common.utilities.hibernate.annotations.EnableHibernateJpa;
 import ru.softlab.efr.common.utilities.rest.converters.config.RestDataConverterConfig;
@@ -16,10 +14,8 @@ import ru.softlab.efr.infrastructure.logging.annotations.EnableLogging;
 import ru.softlab.efr.infrastructure.logging.api.model.OperationLogEntry;
 import ru.softlab.efr.infrastructure.logging.api.services.OperationLogService;
 import ru.softlab.efr.infrastructure.transport.annotations.EnableTransport;
-import ru.softlab.efr.infrastructure.transport.client.MicroServiceTemplate;
 import ru.softlab.efr.services.authorization.annotations.EnablePermissionControl;
 import ru.softlab.efr.services.test.auth.OperationLogServiceStatistics;
-import ru.softlab.efr.services.test.auth.stubs.PrintTemplatesClientStub;
 
 import javax.sql.DataSource;
 
@@ -101,12 +97,5 @@ public class TestRestApplicationConfig {
         executor.setMaxPoolSize(4);
         executor.initialize();
         return executor;
-    }
-
-    @Bean
-    @Primary
-    @Autowired
-    public PrintTemplatesClient printTemplatesClient(MicroServiceTemplate microServiceTemplate) {
-        return new PrintTemplatesClientStub(microServiceTemplate);
     }
 }

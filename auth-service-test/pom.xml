@@ -3,18 +3,18 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>ru.softlab.efr.authentication</groupId>
-        <artifactId>smedservice-auth-service</artifactId>
-        <version>1.0.6-SNAPSHOT</version>
+        <groupId>ru.softlab.insurance.sms.services</groupId>
+        <artifactId>auth-service</artifactId>
+        <version>0.0.1-SNAPSHOT</version>
     </parent>
 
-    <artifactId>smedservice-auth-service-test</artifactId>
+    <artifactId>auth-service-test</artifactId>
 
     <dependencies>
         <dependency>
-            <groupId>ru.softlab.efr.authentication</groupId>
-            <artifactId>smedservice-auth-service-support</artifactId>
-            <version>1.0.6-SNAPSHOT</version>
+            <groupId>ru.softlab.insurance.sms.services</groupId>
+            <artifactId>auth-service-support</artifactId>
+            <version>${project.version}</version>
         </dependency>
 
         <dependency>
