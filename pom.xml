@@ -22,7 +22,7 @@
 
     <scm>
         <url>https://github.com/smed-service-rshb/auth-service</url>
-        <developerConnection>git@github.com:smed-service-rshb/auth-service.git</developerConnection>
+        <developerConnection>scm:git:git@github.com:smed-service-rshb/auth-service.git</developerConnection>
         <tag>v1.0.1</tag>
     </scm>
 
