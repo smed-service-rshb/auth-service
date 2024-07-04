@@ -21,8 +21,8 @@
     </modules>
 
     <scm>
-        <url>http://git.dos.softlab.ru/SMEDSERVICE/auth-service</url>
-        <developerConnection>scm:git:git@git.dos.softlab.ru:SMEDSERVICE/auth-service.git</developerConnection>
+        <url>https://github.com/smed-service-rshb/auth-service</url>
+        <developerConnection>git@github.com:smed-service-rshb/auth-service.git</developerConnection>
         <tag>v1.0.1</tag>
     </scm>
 
