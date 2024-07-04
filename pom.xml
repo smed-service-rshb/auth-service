@@ -21,8 +21,8 @@
     </modules>
 
     <scm>
-        <url>https://github.com/smed-service-rshb/common-dict</url>
-        <developerConnection>scm:git@github.com:smed-service-rshb/common-dict.git</developerConnection>
+        <url>http://git.dos.softlab.ru/SMEDSERVICE/auth-service</url>
+        <developerConnection>scm:git:git@git.dos.softlab.ru:SMEDSERVICE/auth-service.git</developerConnection>
         <tag>v1.0.1</tag>
     </scm>
 
