@@ -9,7 +9,7 @@
 
     <groupId>ru.softlab.insurance.sms.services</groupId>
     <artifactId>auth-service</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>0.0.1</version>
     <packaging>pom</packaging>
 
     <modules>
@@ -23,7 +23,7 @@
     <scm>
         <url>https://github.com/smed-service-rshb/auth-service</url>
         <developerConnection>scm:git:git@github.com:smed-service-rshb/auth-service.git</developerConnection>
-        <tag>v1.0.1</tag>
+        <tag>v-0.0.1</tag>
     </scm>
 
     <repositories>
