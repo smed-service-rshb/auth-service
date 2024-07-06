@@ -53,7 +53,7 @@
         <efr.utilities.version>3.3.0</efr.utilities.version>
         <efr.settings.version>9.1.0</efr.settings.version>
         <efr.transport.version>4.1.0</efr.transport.version>
-        <efr.common.dict.version>1.0.4</efr.common.dict.version>
+        <efr.common.dict.version>0.0.1</efr.common.dict.version>
         <efr.logging.version>3.2.0</efr.logging.version>
         <efr.swagger.codegen.version>2.3.16</efr.swagger.codegen.version>
         <swagger.annotations.version>1.5.16</swagger.annotations.version>
