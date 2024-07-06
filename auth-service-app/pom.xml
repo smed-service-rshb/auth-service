@@ -28,6 +28,22 @@
         </dependency>
 
         <dependency>
+            <groupId>ru.softlab.insurance.sms.services</groupId>
+            <artifactId>common-dict-client</artifactId>
+            <version>${efr.common.dict.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>ru.softlab.insurance.sms.services</groupId>
+                    <artifactId>auth-service-client</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>ru.softlab.insurance.sms.services</groupId>
+                    <artifactId>auth-service-support</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+        <dependency>
             <groupId>ru.softlab.efr.common</groupId>
             <artifactId>utilities</artifactId>
             <version>${efr.utilities.version}</version>
