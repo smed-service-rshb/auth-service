@@ -4,7 +4,7 @@
     <parent>
         <groupId>ru.softlab.insurance.sms.services</groupId>
         <artifactId>auth-service</artifactId>
-        <version>0.0.1</version>
+        <version>0.0.2-SNAPSHOT</version>
     </parent>
 
     <artifactId>auth-service-support</artifactId>
